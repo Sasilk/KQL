@@ -1,0 +1,11 @@
+// Malicious emails delivered to user mailboxes for 24hrs
+/// Malicious emails delivered to user mailboxes for 24hrs
+EmailEvents
+| where Timestamp > ago(1d) and isnotempty(DetectionMethods) and (LatestDeliveryAction contains "Delivered" or LatestDeliveryAction contains "Forwarded")
+
+// Make a pie chart
+EmailPostDeliveryEvents
+| where ThreatTypes == "Phish"
+| extend DetectionMethod = tostring(extract(@'Phish":\["(.*?)"]', 1, DetectionMethods))
+| summarize TotalEvents = count() by DetectionMethod
+| render piechart with(title="Phishing Detection Reason Overview")
