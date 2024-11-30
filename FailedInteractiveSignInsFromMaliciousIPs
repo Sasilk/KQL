@@ -1,0 +1,5 @@
+//To get a list of interactive failed sign-ins from malicious IPs (Error code 50053 indicates "Sign-in was blocked because it came from an IP address with malicious activity”)
+AADSignInEventsBeta
+| where Timestamp > ago(10d) and LogonType == @"[""interactiveUser""]" and ErrorCode == "50053" //and Country !contains "GB"
+| summarize count() by AccountUpn//, Country, IPAddress
+| order by count_ desc
