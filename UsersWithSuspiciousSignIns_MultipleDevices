@@ -1,7 +1,7 @@
 //Users with suspicious sign-ins (Multiple devices in 24hrs)
 // Users that signed in from multiple devices for the last day. 
 AADSignInEventsBeta 
-| where Timestamp > ago(1d) //and LogonType == @"[""interactiveUser""]"
+| where Timestamp > ago(1d) and LogonType == @"[""interactiveUser""]"
 | summarize CountPerDevice = dcount(DeviceName), deviceSet = make_set(DeviceName) by AccountUpn 
 | where CountPerDevice > 1
 | order by CountPerDevice desc
