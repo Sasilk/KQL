@@ -1,0 +1,8 @@
+//Devices that Tor browser running on
+DeviceFileEvents
+| project FileName, DeviceId
+| join (DeviceNetworkEvents 
+| project DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA1, Timestamp, ReportId) on DeviceId 
+| where Timestamp > ago(1d) 
+| where InitiatingProcessFileName in~ ("tor.exe", "meek-client.exe")
+| summarize (Timestamp, ReportId)=arg_max(Timestamp, ReportId) by InitiatingProcessSHA1, DeviceId, InitiatingProcessFileName
