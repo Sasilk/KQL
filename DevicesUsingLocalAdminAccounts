@@ -1,0 +1,11 @@
+//Local Admin Accounts (Actively Used in 7Days)
+// Finds devices that a local admin logged on in last 7 days, from specific domains (eg. UK, US) and with device name starting with "UserPC"
+union withsource=SourceTable DeviceLogonEvents
+| where
+(AccountDomain contains "UK" 
+or AccountDomain contains "US" 
+or DeviceName contains "UserPC")
+and (IsLocalAdmin == true)
+and AccountName !in ("nkelly", "sasilkan")
+| project Timestamp, DeviceName, ActionType, LogonType, AccountName, AccountDomain
+| sort by Timestamp desc
