@@ -1,0 +1,12 @@
+// Potential compromised user after receiving malicious email
+//Show logons happened right after malicious email was received
+let MaliciousEmail=EmailEvents
+| where ThreatTypes has_cs "Malware" 
+| project TimeEmail = Timestamp, Subject, SenderFromAddress, AccountName = tostring(split(RecipientEmailAddress, "@")[0]);
+MaliciousEmail
+| join (
+IdentityLogonEvents
+| project LogonTime = Timestamp, AccountName, DeviceName
+) on AccountName 
+| where (LogonTime - TimeEmail) between (0min.. 1hrs)
+| take 10
