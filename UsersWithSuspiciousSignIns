@@ -1,0 +1,8 @@
+//Users with suspicious sign-ins (Multiple countries in 24hrs)
+// Users that signed in from multiple countries for the last day. 
+AADSignInEventsBeta 
+| where Timestamp > ago(1d) and LogonType == @"[""interactiveUser""]"
+| summarize CountPerCountry = dcount(Country), countrySet = make_set(Country) by AccountUpn 
+| where CountPerCountry > 1
+| order by CountPerCountry desc
+//| limit 5
