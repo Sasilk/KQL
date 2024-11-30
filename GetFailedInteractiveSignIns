@@ -1,0 +1,7 @@
+//To get a list of interactive failed sign-ins
+AADSignInEventsBeta
+| where Timestamp > ago(1d) and LogonType == @"[""interactiveUser""]" and ErrorCode != "0"
+//| summarize count() by AccountUpn//, IPAddress //
+| order by count_ desc
+| project Timestamp, AccountUpn, Application, Country, City, ErrorCode, UserAgent
+| order by Timestamp desc
