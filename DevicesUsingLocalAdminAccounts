@@ -1,4 +1,5 @@
-//Local Admin Accounts (Actively Used in 7Days)
+//Use this query to detect suspicious admin account activities
+//Local Admin Accounts (Actively Used in 7Days) excluding two IT admins
 // Finds devices that a local admin logged on in last 7 days, from specific domains (eg. UK, US) and with device name starting with "UserPC"
 union withsource=SourceTable DeviceLogonEvents
 | where
